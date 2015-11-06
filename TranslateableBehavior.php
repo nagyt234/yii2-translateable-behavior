@@ -4,7 +4,7 @@
  * @link http://2amigos.us
  * @license http://www.opensource.org/licenses/bsd-license.php New BSD License
  */
-namespace dosamigos\translateable;
+namespace app\modules\recipes\components\translateable;
 
 use Yii;
 use yii\base\Behavior;
@@ -172,8 +172,10 @@ class TranslateableBehavior extends Behavior
         /** @var \yii\db\ActiveQuery $relation */
         $relation = $this->owner->getRelation($this->relation);
         $model->{key($relation->link)} = $this->owner->getPrimaryKey();
-        return $model->save();
-
+        if ( !($rc = $model->save()) ) {
+            $this->owner->addErrors($model->getErrors());
+        }
+        return $rc;
     }
 
     /**
